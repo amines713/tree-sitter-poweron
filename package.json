@@ -1,0 +1,19 @@
+{
+  "name": "ln-poweron",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "generate": "./node_modules/.bin/tree-sitter generate",
+    "test": "./node_modules/.bin/tree-sitter test",
+    "parse": "./node_modules/.bin/tree-sitter parse test.pn"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "nan": "^2.14.2"
+  },
+  "devDependencies": {
+    "tree-sitter-cli": "^0.17.3"
+  }
+}

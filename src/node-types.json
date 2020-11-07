@@ -1,0 +1,122 @@
+[
+  {
+    "type": "define_block",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "define_var",
+          "named": true
+        },
+        {
+          "type": "multiline_comment",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "define_var",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "data_type",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "program",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "define_block",
+          "named": true
+        },
+        {
+          "type": "multiline_comment",
+          "named": true
+        },
+        {
+          "type": "target_block",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "target_block",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "=",
+    "named": false
+  },
+  {
+    "type": "DEFINE",
+    "named": false
+  },
+  {
+    "type": "END",
+    "named": false
+  },
+  {
+    "type": "TARGET",
+    "named": false
+  },
+  {
+    "type": "comment",
+    "named": true
+  },
+  {
+    "type": "data_type",
+    "named": true
+  },
+  {
+    "type": "identifier",
+    "named": true
+  },
+  {
+    "type": "multiline_comment",
+    "named": true
+  },
+  {
+    "type": "number",
+    "named": true
+  }
+]
