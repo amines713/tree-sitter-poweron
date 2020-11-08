@@ -1,35 +1,93 @@
 module.exports = grammar({
   name: 'poweron',
 
+  extras: $ => [
+    $.comment,
+    /\s/
+  ],
+
   rules: {
     program: $ => repeat(choice(
-      $.comment,
-      $.multiline_comment,
-			$.define_block,
-			$.target_block
+      $.procedure_block,
+      $.define_block,
+      $.target_package,
+      $.setup_block,
+      $.total_block
     )),
 
-		multiline_comment: $ => token(seq('[', /[^\]]*/s, ']')),
-    comment: $ => token(seq('#', /.*/)),
+    comment: $ => token(choice(
+      seq('#', /.*/),
+      seq(
+        '[',
+        /[^\]]*/s,
+        ']'
+      )
+    )),
 
-		identifier: $ => /[A-Z|a-z]+/,
-		number: $ => /\d+/,
-		data_type: $ => /NUMBER|CHARACTER|[0-9]+/i,
+    _notend: $ => /[^\]]*/,
 
-		endvar: $ => choice($.identifier, $.number),
-		varset: $ => seq($.identifier, '=', choice($.number, $.identifier)),
+    identifier: $ => /[A-Za-z]+/,
+    _number: $ => /[0-9]+/,
 
-		define_var: $ => seq($.identifier, '=', $.data_type),
-		define_block: $ => seq(
-			'DEFINE',
-			repeat(choice($.define_var, $.comment, $.multiline_comment)),
-			'END'
-		),
+    data_type: $ => choice(
+      'NUMBER',
+      'CHARACTER'
+    ),
 
-		target_block: $ => seq(
-			'TARGET',
-			'=',
-			$.identifier
-		)
+    string_literal: $ => token(seq(
+      '"',
+      repeat(/[^"]/),
+      '"'
+    )),
+
+    argument_list: $ => seq(
+      '(',
+      optional(seq(
+        choice($.identifier),
+        repeat(seq(',', $.identifier))
+      )),
+      ')'
+    ),
+
+    function_call: $ => seq(
+      $.identifier,
+      $.argument_list
+    ),
+
+
+
+    assignment: $ => seq($.identifier, '=', $.data_type),
+
+    call_statement: $ => seq('CALL ', field('name', $.identifier)),
+
+    target_package: $ => seq(
+      'TARGET',
+      '=',
+      $.identifier
+    ),
+
+    define_block: $ => seq(
+      'DEFINE',
+      repeat(choice($.assignment)),
+      'END'
+    ),
+
+    procedure_block: $ => seq(
+      'PROCEDURE',
+      repeat(choice($.assignment, $.call_statement, $.function_call)),
+      'END'
+    ),
+
+    setup_block: $ => seq(
+      'SETUP',
+      repeat(choice($.assignment, $.call_statement)),
+      'END'
+    ),
+
+    total_block: $ => seq(
+      'TOTAL',
+      repeat(choice($.call_statement)),
+      'END'
+    )
   }
 })

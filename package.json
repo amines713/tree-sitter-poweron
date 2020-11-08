@@ -1,19 +1,21 @@
 {
-  "name": "ln-poweron",
-  "version": "1.0.0",
-  "description": "",
+  "name": "tree-sitter-poweron",
+  "version": "0.0.11",
+  "description": "Tree Sitter for PowerOn files",
+  "homepage": "https://github.com/amines713/tree-sitter-poweron/tree/main/src",
   "main": "index.js",
   "scripts": {
-    "generate": "./node_modules/.bin/tree-sitter generate",
-    "test": "./node_modules/.bin/tree-sitter test",
-    "parse": "./node_modules/.bin/tree-sitter parse test.pn"
+    "generate": "tree-sitter generate",
+    "test": "tree-sitter test",
+    "parse": "tree-sitter parse test.pn",
+    "build": "tree-sitter generate && node-gyp build"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "nan": "^2.14.2"
+    "nan": "^2.10.0"
   },
   "devDependencies": {
-    "tree-sitter-cli": "^0.17.3"
+    "tree-sitter-cli": "^0.16.9"
   }
 }

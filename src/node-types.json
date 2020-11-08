@@ -1,6 +1,6 @@
 [
   {
-    "type": "define_block",
+    "type": "argument_list",
     "named": true,
     "fields": {},
     "children": {
@@ -8,22 +8,14 @@
       "required": false,
       "types": [
         {
-          "type": "comment",
-          "named": true
-        },
-        {
-          "type": "define_var",
-          "named": true
-        },
-        {
-          "type": "multiline_comment",
+          "type": "identifier",
           "named": true
         }
       ]
     }
   },
   {
-    "type": "define_var",
+    "type": "assignment",
     "named": true,
     "fields": {},
     "children": {
@@ -42,6 +34,84 @@
     }
   },
   {
+    "type": "call_statement",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "data_type",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "define_block",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "assignment",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "function_call",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "argument_list",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "procedure_block",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "assignment",
+          "named": true
+        },
+        {
+          "type": "call_statement",
+          "named": true
+        },
+        {
+          "type": "function_call",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "program",
     "named": true,
     "fields": {},
@@ -50,26 +120,49 @@
       "required": false,
       "types": [
         {
-          "type": "comment",
-          "named": true
-        },
-        {
           "type": "define_block",
           "named": true
         },
         {
-          "type": "multiline_comment",
+          "type": "procedure_block",
           "named": true
         },
         {
-          "type": "target_block",
+          "type": "setup_block",
+          "named": true
+        },
+        {
+          "type": "target_package",
+          "named": true
+        },
+        {
+          "type": "total_block",
           "named": true
         }
       ]
     }
   },
   {
-    "type": "target_block",
+    "type": "setup_block",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "assignment",
+          "named": true
+        },
+        {
+          "type": "call_statement",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "target_package",
     "named": true,
     "fields": {},
     "children": {
@@ -84,7 +177,42 @@
     }
   },
   {
+    "type": "total_block",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "call_statement",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "(",
+    "named": false
+  },
+  {
+    "type": ")",
+    "named": false
+  },
+  {
+    "type": ",",
+    "named": false
+  },
+  {
     "type": "=",
+    "named": false
+  },
+  {
+    "type": "CALL ",
+    "named": false
+  },
+  {
+    "type": "CHARACTER",
     "named": false
   },
   {
@@ -96,27 +224,27 @@
     "named": false
   },
   {
+    "type": "NUMBER",
+    "named": false
+  },
+  {
+    "type": "PROCEDURE",
+    "named": false
+  },
+  {
+    "type": "SETUP",
+    "named": false
+  },
+  {
     "type": "TARGET",
     "named": false
   },
   {
-    "type": "comment",
-    "named": true
-  },
-  {
-    "type": "data_type",
-    "named": true
+    "type": "TOTAL",
+    "named": false
   },
   {
     "type": "identifier",
-    "named": true
-  },
-  {
-    "type": "multiline_comment",
-    "named": true
-  },
-  {
-    "type": "number",
     "named": true
   }
 ]

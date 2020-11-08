@@ -8,11 +8,7 @@
         "members": [
           {
             "type": "SYMBOL",
-            "name": "comment"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "multiline_comment"
+            "name": "procedure_block"
           },
           {
             "type": "SYMBOL",
@@ -20,27 +16,15 @@
           },
           {
             "type": "SYMBOL",
-            "name": "target_block"
-          }
-        ]
-      }
-    },
-    "multiline_comment": {
-      "type": "TOKEN",
-      "content": {
-        "type": "SEQ",
-        "members": [
-          {
-            "type": "STRING",
-            "value": "["
+            "name": "target_package"
           },
           {
-            "type": "PATTERN",
-            "value": "[^\\]]*"
+            "type": "SYMBOL",
+            "name": "setup_block"
           },
           {
-            "type": "STRING",
-            "value": "]"
+            "type": "SYMBOL",
+            "name": "total_block"
           }
         ]
       }
@@ -48,45 +32,141 @@
     "comment": {
       "type": "TOKEN",
       "content": {
-        "type": "SEQ",
+        "type": "CHOICE",
         "members": [
           {
-            "type": "STRING",
-            "value": "#"
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "STRING",
+                "value": "#"
+              },
+              {
+                "type": "PATTERN",
+                "value": ".*"
+              }
+            ]
           },
           {
-            "type": "PATTERN",
-            "value": ".*"
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "STRING",
+                "value": "["
+              },
+              {
+                "type": "PATTERN",
+                "value": "[^\\]]*"
+              },
+              {
+                "type": "STRING",
+                "value": "]"
+              }
+            ]
           }
         ]
       }
     },
+    "_notend": {
+      "type": "PATTERN",
+      "value": "[^\\]]*"
+    },
     "identifier": {
       "type": "PATTERN",
-      "value": "[A-Z|a-z]+"
+      "value": "[A-Za-z]+"
     },
-    "number": {
+    "_number": {
       "type": "PATTERN",
-      "value": "\\d+"
+      "value": "[0-9]+"
     },
     "data_type": {
-      "type": "PATTERN",
-      "value": "NUMBER|CHARACTER|[0-9]+"
-    },
-    "endvar": {
       "type": "CHOICE",
       "members": [
         {
-          "type": "SYMBOL",
-          "name": "identifier"
+          "type": "STRING",
+          "value": "NUMBER"
         },
         {
-          "type": "SYMBOL",
-          "name": "number"
+          "type": "STRING",
+          "value": "CHARACTER"
         }
       ]
     },
-    "varset": {
+    "string_literal": {
+      "type": "TOKEN",
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "\""
+          },
+          {
+            "type": "REPEAT",
+            "content": {
+              "type": "PATTERN",
+              "value": "[^\"]"
+            }
+          },
+          {
+            "type": "STRING",
+            "value": "\""
+          }
+        ]
+      }
+    },
+    "argument_list": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "("
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "SYMBOL",
+                      "name": "identifier"
+                    }
+                  ]
+                },
+                {
+                  "type": "REPEAT",
+                  "content": {
+                    "type": "SEQ",
+                    "members": [
+                      {
+                        "type": "STRING",
+                        "value": ","
+                      },
+                      {
+                        "type": "SYMBOL",
+                        "name": "identifier"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "STRING",
+          "value": ")"
+        }
+      ]
+    },
+    "function_call": {
       "type": "SEQ",
       "members": [
         {
@@ -94,25 +174,12 @@
           "name": "identifier"
         },
         {
-          "type": "STRING",
-          "value": "="
-        },
-        {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "number"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "identifier"
-            }
-          ]
+          "type": "SYMBOL",
+          "name": "argument_list"
         }
       ]
     },
-    "define_var": {
+    "assignment": {
       "type": "SEQ",
       "members": [
         {
@@ -126,6 +193,40 @@
         {
           "type": "SYMBOL",
           "name": "data_type"
+        }
+      ]
+    },
+    "call_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "CALL "
+        },
+        {
+          "type": "FIELD",
+          "name": "name",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          }
+        }
+      ]
+    },
+    "target_package": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "TARGET"
+        },
+        {
+          "type": "STRING",
+          "value": "="
+        },
+        {
+          "type": "SYMBOL",
+          "name": "identifier"
         }
       ]
     },
@@ -143,15 +244,7 @@
             "members": [
               {
                 "type": "SYMBOL",
-                "name": "define_var"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "comment"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "multiline_comment"
+                "name": "assignment"
               }
             ]
           }
@@ -162,25 +255,99 @@
         }
       ]
     },
-    "target_block": {
+    "procedure_block": {
       "type": "SEQ",
       "members": [
         {
           "type": "STRING",
-          "value": "TARGET"
+          "value": "PROCEDURE"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "assignment"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "call_statement"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "function_call"
+              }
+            ]
+          }
         },
         {
           "type": "STRING",
-          "value": "="
+          "value": "END"
+        }
+      ]
+    },
+    "setup_block": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "SETUP"
         },
         {
-          "type": "SYMBOL",
-          "name": "identifier"
+          "type": "REPEAT",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "assignment"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "call_statement"
+              }
+            ]
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "END"
+        }
+      ]
+    },
+    "total_block": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "TOTAL"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "call_statement"
+              }
+            ]
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "END"
         }
       ]
     }
   },
   "extras": [
+    {
+      "type": "SYMBOL",
+      "name": "comment"
+    },
     {
       "type": "PATTERN",
       "value": "\\s"
