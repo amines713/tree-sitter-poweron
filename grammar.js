@@ -87,9 +87,7 @@ module.exports = grammar({
 			choice(
 				$._number,
 				$.data_type,
-				$.identifier,
-				$.add_concat,
-				$.function_call
+				$.add_concat
 			)
 		)),
 

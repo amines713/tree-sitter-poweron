@@ -1,6 +1,6 @@
 {
   "name": "tree-sitter-poweron",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "Tree Sitter for PowerOn files",
   "homepage": "https://github.com/amines713/tree-sitter-poweron/tree/main/src",
   "main": "index.js",
