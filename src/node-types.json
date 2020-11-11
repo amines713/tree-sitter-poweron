@@ -1,5 +1,28 @@
 [
   {
+    "type": "add_concat",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "function_call",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "string_literal",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "argument_list",
     "named": true,
     "fields": {},
@@ -9,6 +32,10 @@
       "types": [
         {
           "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "string_literal",
           "named": true
         }
       ]
@@ -23,7 +50,15 @@
       "required": true,
       "types": [
         {
+          "type": "add_concat",
+          "named": true
+        },
+        {
           "type": "data_type",
+          "named": true
+        },
+        {
+          "type": "function_call",
           "named": true
         },
         {
@@ -36,17 +71,24 @@
   {
     "type": "call_statement",
     "named": true,
-    "fields": {
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      }
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "call",
+          "named": true
+        },
+        {
+          "type": "function_call",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -60,10 +102,49 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": false,
+      "required": true,
       "types": [
         {
           "type": "assignment",
+          "named": true
+        },
+        {
+          "type": "define",
+          "named": true
+        },
+        {
+          "type": "end",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "for_loop",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "assignment",
+          "named": true
+        },
+        {
+          "type": "call_statement",
+          "named": true
+        },
+        {
+          "type": "end",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "if_statement",
           "named": true
         }
       ]
@@ -89,12 +170,58 @@
     }
   },
   {
+    "type": "if_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "assignment",
+          "named": true
+        },
+        {
+          "type": "end",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "print_block",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "assignment",
+          "named": true
+        },
+        {
+          "type": "end",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "print",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "procedure_block",
     "named": true,
     "fields": {},
     "children": {
       "multiple": true,
-      "required": false,
+      "required": true,
       "types": [
         {
           "type": "assignment",
@@ -105,7 +232,15 @@
           "named": true
         },
         {
+          "type": "end",
+          "named": true
+        },
+        {
           "type": "function_call",
+          "named": true
+        },
+        {
+          "type": "procedure",
           "named": true
         }
       ]
@@ -121,6 +256,10 @@
       "types": [
         {
           "type": "define_block",
+          "named": true
+        },
+        {
+          "type": "print_block",
           "named": true
         },
         {
@@ -148,7 +287,7 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": false,
+      "required": true,
       "types": [
         {
           "type": "assignment",
@@ -156,6 +295,18 @@
         },
         {
           "type": "call_statement",
+          "named": true
+        },
+        {
+          "type": "end",
+          "named": true
+        },
+        {
+          "type": "for_loop",
+          "named": true
+        },
+        {
+          "type": "setup",
           "named": true
         }
       ]
@@ -166,11 +317,15 @@
     "named": true,
     "fields": {},
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": true,
       "types": [
         {
           "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "target",
           "named": true
         }
       ]
@@ -182,10 +337,18 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": false,
+      "required": true,
       "types": [
         {
           "type": "call_statement",
+          "named": true
+        },
+        {
+          "type": "end",
+          "named": true
+        },
+        {
+          "type": "total",
           "named": true
         }
       ]
@@ -200,6 +363,10 @@
     "named": false
   },
   {
+    "type": "+",
+    "named": false
+  },
+  {
     "type": ",",
     "named": false
   },
@@ -208,19 +375,19 @@
     "named": false
   },
   {
-    "type": "CALL ",
-    "named": false
-  },
-  {
     "type": "CHARACTER",
     "named": false
   },
   {
-    "type": "DEFINE",
+    "type": "DO",
     "named": false
   },
   {
-    "type": "END",
+    "type": "FOR",
+    "named": false
+  },
+  {
+    "type": "IF",
     "named": false
   },
   {
@@ -228,23 +395,51 @@
     "named": false
   },
   {
-    "type": "PROCEDURE",
+    "type": "THEN DO",
     "named": false
   },
   {
-    "type": "SETUP",
+    "type": "TO",
     "named": false
   },
   {
-    "type": "TARGET",
-    "named": false
+    "type": "call",
+    "named": true
   },
   {
-    "type": "TOTAL",
-    "named": false
+    "type": "define",
+    "named": true
+  },
+  {
+    "type": "end",
+    "named": true
   },
   {
     "type": "identifier",
+    "named": true
+  },
+  {
+    "type": "print",
+    "named": true
+  },
+  {
+    "type": "procedure",
+    "named": true
+  },
+  {
+    "type": "setup",
+    "named": true
+  },
+  {
+    "type": "string_literal",
+    "named": true
+  },
+  {
+    "type": "target",
+    "named": true
+  },
+  {
+    "type": "total",
     "named": true
   }
 ]

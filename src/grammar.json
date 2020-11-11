@@ -8,6 +8,10 @@
         "members": [
           {
             "type": "SYMBOL",
+            "name": "print_block"
+          },
+          {
+            "type": "SYMBOL",
             "name": "procedure_block"
           },
           {
@@ -71,13 +75,25 @@
       "type": "PATTERN",
       "value": "[^\\]]*"
     },
-    "identifier": {
+    "_notendword": {
       "type": "PATTERN",
-      "value": "[A-Za-z]+"
+      "value": "[^END]*"
+    },
+    "_newline": {
+      "type": "STRING",
+      "value": "\n"
     },
     "_number": {
       "type": "PATTERN",
       "value": "[0-9]+"
+    },
+    "identifier": {
+      "type": "PATTERN",
+      "value": "[A-Za-z]+"
+    },
+    "end": {
+      "type": "STRING",
+      "value": "END"
     },
     "data_type": {
       "type": "CHOICE",
@@ -115,6 +131,61 @@
         ]
       }
     },
+    "add_concat": {
+      "type": "PREC",
+      "value": 2,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "string_literal"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "function_call"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "identifier"
+              }
+            ]
+          },
+          {
+            "type": "REPEAT",
+            "content": {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "+"
+                },
+                {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "SYMBOL",
+                      "name": "string_literal"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "function_call"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "identifier"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
     "argument_list": {
       "type": "SEQ",
       "members": [
@@ -134,6 +205,10 @@
                     {
                       "type": "SYMBOL",
                       "name": "identifier"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "string_literal"
                     }
                   ]
                 },
@@ -180,62 +255,92 @@
       ]
     },
     "assignment": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "SYMBOL",
-          "name": "identifier"
-        },
-        {
-          "type": "STRING",
-          "value": "="
-        },
-        {
-          "type": "SYMBOL",
-          "name": "data_type"
-        }
-      ]
+      "type": "PREC",
+      "value": 1,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "SYMBOL",
+            "name": "identifier"
+          },
+          {
+            "type": "STRING",
+            "value": "="
+          },
+          {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "_number"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "data_type"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "identifier"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "add_concat"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "function_call"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "call": {
+      "type": "STRING",
+      "value": "CALL"
     },
     "call_statement": {
       "type": "SEQ",
       "members": [
         {
-          "type": "STRING",
-          "value": "CALL "
-        },
-        {
-          "type": "FIELD",
-          "name": "name",
-          "content": {
-            "type": "SYMBOL",
-            "name": "identifier"
-          }
-        }
-      ]
-    },
-    "target_package": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "STRING",
-          "value": "TARGET"
-        },
-        {
-          "type": "STRING",
-          "value": "="
-        },
-        {
           "type": "SYMBOL",
-          "name": "identifier"
+          "name": "call"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "identifier"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "function_call"
+            }
+          ]
         }
       ]
     },
-    "define_block": {
+    "if_statement": {
       "type": "SEQ",
       "members": [
         {
           "type": "STRING",
-          "value": "DEFINE"
+          "value": "IF"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "assignment"
+            }
+          ]
+        },
+        {
+          "type": "STRING",
+          "value": "THEN DO"
         },
         {
           "type": "REPEAT",
@@ -250,17 +355,129 @@
           }
         },
         {
-          "type": "STRING",
-          "value": "END"
+          "type": "SYMBOL",
+          "name": "end"
         }
       ]
+    },
+    "for_loop": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "FOR"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "assignment"
+        },
+        {
+          "type": "STRING",
+          "value": "TO"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "identifier"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "_number"
+            }
+          ]
+        },
+        {
+          "type": "STRING",
+          "value": "DO"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "call_statement"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "assignment"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "if_statement"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SYMBOL",
+          "name": "end"
+        }
+      ]
+    },
+    "target": {
+      "type": "STRING",
+      "value": "TARGET"
+    },
+    "target_package": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "target"
+        },
+        {
+          "type": "STRING",
+          "value": "="
+        },
+        {
+          "type": "SYMBOL",
+          "name": "identifier"
+        }
+      ]
+    },
+    "define": {
+      "type": "STRING",
+      "value": "DEFINE"
+    },
+    "define_block": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "define"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "assignment"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SYMBOL",
+          "name": "end"
+        }
+      ]
+    },
+    "procedure": {
+      "type": "STRING",
+      "value": "PROCEDURE"
     },
     "procedure_block": {
       "type": "SEQ",
       "members": [
         {
-          "type": "STRING",
-          "value": "PROCEDURE"
+          "type": "SYMBOL",
+          "name": "procedure"
         },
         {
           "type": "REPEAT",
@@ -283,17 +500,62 @@
           }
         },
         {
-          "type": "STRING",
-          "value": "END"
+          "type": "SYMBOL",
+          "name": "end"
         }
       ]
+    },
+    "print": {
+      "type": "STRING",
+      "value": "PRINT"
+    },
+    "print_block": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "print"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "assignment"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "identifier"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SYMBOL",
+          "name": "end"
+        }
+      ]
+    },
+    "setup": {
+      "type": "STRING",
+      "value": "SETUP"
     },
     "setup_block": {
       "type": "SEQ",
       "members": [
         {
-          "type": "STRING",
-          "value": "SETUP"
+          "type": "SYMBOL",
+          "name": "setup"
         },
         {
           "type": "REPEAT",
@@ -307,22 +569,30 @@
               {
                 "type": "SYMBOL",
                 "name": "call_statement"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "for_loop"
               }
             ]
           }
         },
         {
-          "type": "STRING",
-          "value": "END"
+          "type": "SYMBOL",
+          "name": "end"
         }
       ]
+    },
+    "total": {
+      "type": "STRING",
+      "value": "TOTAL"
     },
     "total_block": {
       "type": "SEQ",
       "members": [
         {
-          "type": "STRING",
-          "value": "TOTAL"
+          "type": "SYMBOL",
+          "name": "total"
         },
         {
           "type": "REPEAT",
@@ -337,8 +607,8 @@
           }
         },
         {
-          "type": "STRING",
-          "value": "END"
+          "type": "SYMBOL",
+          "name": "end"
         }
       ]
     }
